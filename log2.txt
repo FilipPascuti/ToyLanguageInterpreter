@@ -1,0 +1,50 @@
+Execution Stack: [int a ; int b ; a=2 + 3 * 5 ; b=a + 1 ; print(b)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [int a, int b ; a=2 + 3 * 5 ; b=a + 1 ; print(b)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [int b ; a=2 + 3 * 5 ; b=a + 1 ; print(b)]
+Symbol Table: {a=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [int b, a=2 + 3 * 5 ; b=a + 1 ; print(b)]
+Symbol Table: {a=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [a=2 + 3 * 5 ; b=a + 1 ; print(b)]
+Symbol Table: {a=0, b=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [a=2 + 3 * 5, b=a + 1 ; print(b)]
+Symbol Table: {a=0, b=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [b=a + 1 ; print(b)]
+Symbol Table: {a=17, b=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [b=a + 1, print(b)]
+Symbol Table: {a=17, b=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [print(b)]
+Symbol Table: {a=17, b=18}
+Output: []
+FileTable: {}
+
+Execution Stack: []
+Symbol Table: {a=17, b=18}
+Output: [18]
+FileTable: {}
+

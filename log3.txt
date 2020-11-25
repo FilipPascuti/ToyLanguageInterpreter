@@ -1,0 +1,55 @@
+Execution Stack: [boolean a ; int v ; a=true ; if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [boolean a, int v ; a=true ; if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [int v ; a=true ; if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {a=false}
+Output: []
+FileTable: {}
+
+Execution Stack: [int v, a=true ; if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {a=false}
+Output: []
+FileTable: {}
+
+Execution Stack: [a=true ; if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {a=false, v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [a=true, if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {a=false, v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [if( a ) then {v=2} else {v=3} ; print(v)]
+Symbol Table: {a=true, v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [if( a ) then {v=2} else {v=3}, print(v)]
+Symbol Table: {a=true, v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [v=2, print(v)]
+Symbol Table: {a=true, v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [print(v)]
+Symbol Table: {a=true, v=2}
+Output: []
+FileTable: {}
+
+Execution Stack: []
+Symbol Table: {a=true, v=2}
+Output: [2]
+FileTable: {}
+

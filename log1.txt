@@ -1,0 +1,30 @@
+Execution Stack: [int v ; v=2 ; print(v)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [int v, v=2 ; print(v)]
+Symbol Table: {}
+Output: []
+FileTable: {}
+
+Execution Stack: [v=2 ; print(v)]
+Symbol Table: {v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [v=2, print(v)]
+Symbol Table: {v=0}
+Output: []
+FileTable: {}
+
+Execution Stack: [print(v)]
+Symbol Table: {v=2}
+Output: []
+FileTable: {}
+
+Execution Stack: []
+Symbol Table: {v=2}
+Output: [2]
+FileTable: {}
+
