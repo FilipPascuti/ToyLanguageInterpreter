@@ -5,6 +5,7 @@ import model.ProgramState;
 import model.expressions.Expression;
 import model.types.BooleanType;
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.utilities.ADTs.IStack;
 import model.values.BooleanValue;
 import model.values.Value;
@@ -25,7 +26,8 @@ public class IfStatement implements IStatement {
     public ProgramState execute(ProgramState state) {
         IDictionary<String, Value> symbolTable = state.getSymbolTable();
         IStack<IStatement> executionStack = state.getExecutionStack();
-        Value value = expression.evaluate(symbolTable);
+        IHeap<Value> heap = state.getHeap();
+        Value value = expression.evaluate(symbolTable, heap);
         if(!value.getType().equals(new BooleanType()))
             throw new InvalidArguments("invalid type of if argument");
         boolean result = ((BooleanValue) value).getValue();
@@ -33,7 +35,7 @@ public class IfStatement implements IStatement {
             executionStack.push(thenStatement);
         else
             executionStack.push(elseStatement);
-        return state;
+        return null;
     }
 
     @Override

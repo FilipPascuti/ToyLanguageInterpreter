@@ -9,6 +9,7 @@ import model.types.IntType;
 import model.types.StringType;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IFileTable;
+import model.utilities.ADTs.IHeap;
 import model.values.IntValue;
 import model.values.StringValue;
 import model.values.Value;
@@ -30,11 +31,12 @@ public class ReadFileStatement implements IStatement {
     public ProgramState execute(ProgramState state) {
         IDictionary<String, Value> symbolTable = state.getSymbolTable();
         IFileTable fileTable = state.getFileTable();
+        IHeap<Value> heap = state.getHeap();
         if(!symbolTable.containsKey(variableName))
             throw new NotFoundException("The variable does not exist");
         if(!(symbolTable.lookUp(variableName).getType().equals(new IntType())))
             throw new InvalidArguments("Invalid variable type");
-        Value value = expression.evaluate(symbolTable);
+        Value value = expression.evaluate(symbolTable, heap);
         if(!(value.getType().equals(new StringType())))
             throw new InvalidArguments("The expresion is not of valid string type.");
         StringValue filename = ((StringValue) value);
@@ -51,7 +53,7 @@ public class ReadFileStatement implements IStatement {
             symbolTable.replace(variableName, new IntValue(0));
         else
             symbolTable.replace(variableName, new IntValue((Integer.parseInt(line))));
-        return state;
+        return null;
     }
 
     @Override

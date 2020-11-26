@@ -40,6 +40,11 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     }
 
     @Override
+    public Map<K, V> getContent() {
+        return map;
+    }
+
+    @Override
     public String toString() {
         return map.toString() ;
     }

@@ -3,6 +3,7 @@ package model.expressions;
 import exceptions.InvalidArguments;
 import model.types.IntType;
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.values.BooleanValue;
 import model.values.IntValue;
 import model.values.Value;
@@ -20,11 +21,11 @@ public class RelationalExpression implements Expression{
     }
 
     @Override
-    public Value evaluate(IDictionary<String, Value> symbolTable) {
-        Value valueLeft = left.evaluate(symbolTable);
+    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
+        Value valueLeft = left.evaluate(symbolTable, heap);
         if(!(valueLeft.getType().equals(new IntType())))
             throw new InvalidArguments("Invalid left argument");
-        Value valueRight = right.evaluate(symbolTable);
+        Value valueRight = right.evaluate(symbolTable, heap);
         if(!(valueRight.getType().equals(new IntType())))
             throw new InvalidArguments("Invalid right argument");
         int numberLeft = ((IntValue) valueLeft).getValue();

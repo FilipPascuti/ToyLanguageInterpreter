@@ -3,6 +3,7 @@ package model.expressions;
 import exceptions.InvalidArguments;
 import model.types.BooleanType;
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.values.BooleanValue;
 import model.values.Value;
 
@@ -19,12 +20,12 @@ public class LogicExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(IDictionary<String, Value> symbolTable) {
-        Value value1 = left.evaluate(symbolTable);
+    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
+        Value value1 = left.evaluate(symbolTable, heap);
         if(!value1.getType().equals(new BooleanType()))
             throw new InvalidArguments("first operator is not of type boolean");
         boolean bool1 = ((BooleanValue) value1).getValue();
-        Value value2 = right.evaluate(symbolTable);
+        Value value2 = right.evaluate(symbolTable, heap);
         if(!value2.getType().equals(new BooleanType()))
             throw new InvalidArguments("second operator is not of type boolean");
         boolean bool2 = ((BooleanValue) value2).getValue();

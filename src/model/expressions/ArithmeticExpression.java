@@ -4,6 +4,7 @@ import exceptions.DivisionByZero;
 import exceptions.InvalidArguments;
 import model.types.IntType;
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.values.IntValue;
 import model.values.Value;
 
@@ -19,13 +20,13 @@ public class ArithmeticExpression implements Expression{
     }
 
     @Override
-    public Value evaluate(IDictionary<String, Value> symbolTable) {
+    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
         Value value1, value2;
-        value1 = left.evaluate(symbolTable);
+        value1 = left.evaluate(symbolTable, heap);
         if(!value1.getType().equals(new IntType()))
             throw new InvalidArguments("first operator is not an integer");
         int number1 = ((IntValue) value1).getValue();
-        value2 = right.evaluate(symbolTable);
+        value2 = right.evaluate(symbolTable, heap);
         if(!value2.getType().equals(new IntType()))
             throw new InvalidArguments("second operator is not an integer");
         int number2 = ((IntValue) value2).getValue();
