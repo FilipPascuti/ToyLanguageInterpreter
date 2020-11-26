@@ -3,6 +3,7 @@ package model.statements;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.utilities.ADTs.IList;
 import model.values.Value;
 
@@ -18,9 +19,10 @@ public class PrintStatement implements IStatement{
     public ProgramState execute(ProgramState state) {
         IList<Value> output = state.getOutput();
         IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        Value value = expression.evaluate(symbolTable);
+        IHeap<Value> heap = state.getHeap();
+        Value value = expression.evaluate(symbolTable, heap);
         output.add(value);
-        return state;
+        return null;
     }
 
     @Override

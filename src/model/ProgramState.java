@@ -10,22 +10,15 @@ public class ProgramState {
     private IList<Value> output;
     private IFileTable fileTable;
     private IStatement originalProgram;
+    private IHeap<Value> heap;
 
-    public ProgramState(IStack<IStatement> executionStack, IDictionary<String, Value> symbolTable, IList<Value> output, IStatement originalProgram) {
-        this.executionStack = executionStack;
-        this.symbolTable = symbolTable;
-        this.output = output;
-        this.originalProgram = originalProgram;
-        this.executionStack.push(originalProgram);
-        this.fileTable = new FileTable();
-    }
-
-    public ProgramState(IStack<IStatement> executionStack, IDictionary<String, Value> symbolTable, IList<Value> output, IFileTable fileTable, IStatement originalProgram) {
+    public ProgramState(IStack<IStatement> executionStack, IDictionary<String, Value> symbolTable, IList<Value> output, IFileTable fileTable, IStatement originalProgram, IHeap<Value> heap) {
         this.executionStack = executionStack;
         this.symbolTable = symbolTable;
         this.output = output;
         this.fileTable = fileTable;
         this.originalProgram = originalProgram;
+        this.heap = heap;
         this.executionStack.push(originalProgram);
     }
 
@@ -69,11 +62,16 @@ public class ProgramState {
         this.fileTable = fileTable;
     }
 
+    public IHeap<Value> getHeap() { return heap; }
+
+    public void setHeap(IHeap<Value> heap) { this.heap = heap; }
+
     @Override
     public String toString() {
         return "Execution Stack: " + executionStack +
                 "\nSymbol Table: " + symbolTable +
                 "\nOutput: " + output +
-                "\nFileTable: " + fileTable + "\n";
+                "\nFileTable: " + fileTable +
+                "\nHeap: " + heap + "\n";
     }
 }

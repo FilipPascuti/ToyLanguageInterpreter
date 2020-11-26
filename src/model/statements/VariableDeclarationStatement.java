@@ -2,10 +2,7 @@ package model.statements;
 
 import exceptions.AlreadyExistingVariable;
 import model.ProgramState;
-import model.types.BooleanType;
-import model.types.IntType;
-import model.types.StringType;
-import model.types.Type;
+import model.types.*;
 import model.utilities.ADTs.IDictionary;
 import model.values.BooleanValue;
 import model.values.IntValue;
@@ -31,7 +28,9 @@ public class VariableDeclarationStatement implements IStatement {
             symbolTable.put(name, type.defaultValue());
         else if(type instanceof StringType)
             symbolTable.put(name, type.defaultValue());
-        return state;
+        else if(type instanceof RefType)
+            symbolTable.put(name, type.defaultValue());
+        return null;
     }
 
     @Override

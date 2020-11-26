@@ -56,10 +56,8 @@ public class Repository implements IRepository{
                 this.firstFileCall = false;
             }
             PrintWriter logFile = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
-//            System.out.println(this.program.toString());
             logFile.write(this.program.toString() + "\n");
             logFile.close();
-
         }
         catch(IOException e){
             throw new WritingExeption("Couldn't write to file");

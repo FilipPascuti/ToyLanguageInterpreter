@@ -1,6 +1,7 @@
 package model.expressions;
 
 import model.utilities.ADTs.IDictionary;
+import model.utilities.ADTs.IHeap;
 import model.values.Value;
 
 public class VarExpression implements Expression{
@@ -12,7 +13,7 @@ public class VarExpression implements Expression{
     }
 
     @Override
-    public Value evaluate(IDictionary<String, Value> symbolTable) {
+    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
         return symbolTable.lookUp(id);
     }
 

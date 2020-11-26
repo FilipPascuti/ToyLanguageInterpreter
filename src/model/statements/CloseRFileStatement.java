@@ -8,6 +8,7 @@ import model.expressions.Expression;
 import model.types.StringType;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IFileTable;
+import model.utilities.ADTs.IHeap;
 import model.values.StringValue;
 import model.values.Value;
 
@@ -26,7 +27,8 @@ public class CloseRFileStatement implements IStatement {
     public ProgramState execute(ProgramState state) {
         IDictionary<String, Value> symbolTable = state.getSymbolTable();
         IFileTable fileTable = state.getFileTable();
-        var value = expression.evaluate(symbolTable);
+        IHeap<Value> heap = state.getHeap();
+        var value = expression.evaluate(symbolTable, heap);
         if(!(value.getType().equals(new StringType())))
             throw new InvalidArguments("invalid expression type");
         StringValue filename = (StringValue) value;
@@ -39,7 +41,7 @@ public class CloseRFileStatement implements IStatement {
             throw new ClosingFileException("An error occured while trying to close the file");
         }
         fileTable.remove(filename);
-        return state;
+        return null;
     }
 
     @Override
