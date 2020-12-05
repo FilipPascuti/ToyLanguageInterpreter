@@ -21,19 +21,21 @@ public class NewStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IHeap<Value> heap = state.getHeap();
-        if(!symbolTable.containsKey(variableName))
-            throw new NotFoundException("Variable is not defined.");
-        Value variable = symbolTable.lookUp(variableName);
-        if(!(variable.getType() instanceof RefType))
-            throw new InvalidArguments("invalid type of variable");
-        Value value = expression.evaluate(symbolTable, heap);
-        if(!variable.getType().equals(new RefType(value.getType())))
-            throw new InvalidArguments("the types of the variable and value are not equal");
-        int newAddress = heap.put(value);
-        symbolTable.replace(variableName, new RefValue(newAddress, ((RefValue) variable).getLocationType() ));
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IHeap<Value> heap = state.getHeap();
+            if (!symbolTable.containsKey(variableName))
+                throw new NotFoundException("Variable is not defined.");
+            Value variable = symbolTable.lookUp(variableName);
+            if (!(variable.getType() instanceof RefType))
+                throw new InvalidArguments("invalid type of variable");
+            Value value = expression.evaluate(symbolTable, heap);
+            if (!variable.getType().equals(new RefType(value.getType())))
+                throw new InvalidArguments("the types of the variable and value are not equal");
+            int newAddress = heap.put(value);
+            symbolTable.replace(variableName, new RefValue(newAddress, ((RefValue) variable).getLocationType()));
+        }
         return null;
     }
 

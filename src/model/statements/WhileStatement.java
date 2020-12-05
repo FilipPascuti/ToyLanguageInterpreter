@@ -21,16 +21,18 @@ public class WhileStatement implements  IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IStack<IStatement> executionStack = state.getExecutionStack();
-        IHeap<Value> heap = state.getHeap();
-        Value value = condition.evaluate(symbolTable, heap);
-        if(!value.getType().equals(new BooleanType()))
-            throw new InvalidArguments("Invalid type for while condition");
-        if(((BooleanValue) value).getValue()){
-            executionStack.push(this);
-            executionStack.push(statement);
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IStack<IStatement> executionStack = state.getExecutionStack();
+            IHeap<Value> heap = state.getHeap();
+            Value value = condition.evaluate(symbolTable, heap);
+            if (!value.getType().equals(new BooleanType()))
+                throw new InvalidArguments("Invalid type for while condition");
+            if (((BooleanValue) value).getValue()) {
+                executionStack.push(this);
+                executionStack.push(statement);
+            }
         }
         return null;
     }

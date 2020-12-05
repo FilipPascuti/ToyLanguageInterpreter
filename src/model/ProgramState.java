@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.StackIsEmptyException;
 import model.statements.IStatement;
 import model.utilities.ADTs.*;
 import model.values.Value;
@@ -11,6 +12,8 @@ public class ProgramState {
     private IFileTable fileTable;
     private IStatement originalProgram;
     private IHeap<Value> heap;
+    public static int lastId = 0;
+    private final int programId;
 
     public ProgramState(IStack<IStatement> executionStack, IDictionary<String, Value> symbolTable, IList<Value> output, IFileTable fileTable, IStatement originalProgram, IHeap<Value> heap) {
         this.executionStack = executionStack;
@@ -20,6 +23,12 @@ public class ProgramState {
         this.originalProgram = originalProgram;
         this.heap = heap;
         this.executionStack.push(originalProgram);
+        this.programId = getNewProgramStateId();
+    }
+
+    public static synchronized int getNewProgramStateId() {
+        lastId++;
+        return lastId;
     }
 
     public IStack<IStatement> getExecutionStack() {
@@ -66,9 +75,22 @@ public class ProgramState {
 
     public void setHeap(IHeap<Value> heap) { this.heap = heap; }
 
+    public boolean isNotCompleted(){
+        return !this.executionStack.isEmpty();
+    }
+
+    public ProgramState oneStep(){
+        if(this.executionStack.isEmpty())
+            throw new StackIsEmptyException("The execution stack is empty.\n");
+        IStatement currentStatement = executionStack.pop();
+        return currentStatement.execute(this);
+    }
+
+
     @Override
     public String toString() {
-        return "Execution Stack: " + executionStack +
+        return  "ID: " + programId +
+                "\nExecution Stack: " + executionStack +
                 "\nSymbol Table: " + symbolTable +
                 "\nOutput: " + output +
                 "\nFileTable: " + fileTable +

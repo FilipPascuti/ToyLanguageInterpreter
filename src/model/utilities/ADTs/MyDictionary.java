@@ -1,14 +1,17 @@
 package model.utilities.ADTs;
 
+import exceptions.VariableNotDefined;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MyDictionary<K, V> implements IDictionary<K, V> {
 
     private Map<K, V> map;
 
     public MyDictionary() {
-        map = new HashMap<>();
+        map = new ConcurrentHashMap<>();
     }
 
     @Override

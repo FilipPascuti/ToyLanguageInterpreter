@@ -1,15 +1,12 @@
 package model.utilities.ADTs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class MyList<E> implements IList<E> {
     private List<E> list;
 
     public MyList() {
-        this.list = new ArrayList<>();
+        this.list = new Vector<>();
     }
 
     public MyList(Collection<E> elements){

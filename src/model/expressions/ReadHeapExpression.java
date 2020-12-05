@@ -16,14 +16,16 @@ public class ReadHeapExpression implements Expression{
     }
 
     @Override
-    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
+    public synchronized Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
         Value value = expression.evaluate(symbolTable, heap);
         if(!(value.getType() instanceof RefType))
             throw new InvalidArguments("invalid type of variable");
         int address = ((RefValue) value).getAddress();
-        if(!heap.containsKey(address))
-            throw new InvalidArguments("The variable is not declared in the heap");
-        return heap.lookUp(address);
+        synchronized (heap) {
+            if (!heap.containsKey(address))
+                throw new InvalidArguments("The variable is not declared in the heap");
+            return heap.lookUp(address);
+        }
     }
 
     @Override

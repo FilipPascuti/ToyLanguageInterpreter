@@ -1,6 +1,6 @@
 package model.utilities.ADTs;
 
-import model.values.Value;
+import exceptions.VariableNotDefined;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

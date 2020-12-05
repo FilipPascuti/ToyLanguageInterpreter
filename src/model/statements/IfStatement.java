@@ -23,18 +23,20 @@ public class IfStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IStack<IStatement> executionStack = state.getExecutionStack();
-        IHeap<Value> heap = state.getHeap();
-        Value value = expression.evaluate(symbolTable, heap);
-        if(!value.getType().equals(new BooleanType()))
-            throw new InvalidArguments("invalid type of if argument");
-        boolean result = ((BooleanValue) value).getValue();
-        if(result)
-            executionStack.push(thenStatement);
-        else
-            executionStack.push(elseStatement);
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IStack<IStatement> executionStack = state.getExecutionStack();
+            IHeap<Value> heap = state.getHeap();
+            Value value = expression.evaluate(symbolTable, heap);
+            if (!value.getType().equals(new BooleanType()))
+                throw new InvalidArguments("invalid type of if argument");
+            boolean result = ((BooleanValue) value).getValue();
+            if (result)
+                executionStack.push(thenStatement);
+            else
+                executionStack.push(elseStatement);
+        }
         return null;
     }
 

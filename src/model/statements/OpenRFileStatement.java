@@ -23,21 +23,23 @@ public class OpenRFileStatement implements IStatement{
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IFileTable fileTable = state.getFileTable();
-        IHeap<Value> heap = state.getHeap();
-        var value = expression.evaluate(symbolTable, heap);
-        if(!(value.getType().equals(new  StringType())))
-            throw new InvalidArguments("invalid expression type");
-        if(fileTable.containsKey((StringValue) value))
-            throw new AlreadyExistingVariable("File was already opened");
-        StringValue filename = ((StringValue) value);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(filename.getValue()));
-            fileTable.put(filename, bufferedReader);
-        } catch ( FileNotFoundException fileNotFoundException){
-            throw new NotFoundException("File not found" + filename.getValue());
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IFileTable fileTable = state.getFileTable();
+            IHeap<Value> heap = state.getHeap();
+            var value = expression.evaluate(symbolTable, heap);
+            if(!(value.getType().equals(new  StringType())))
+                throw new InvalidArguments("invalid expression type");
+            if (fileTable.containsKey((StringValue) value))
+                throw new AlreadyExistingVariable("File was already opened");
+            StringValue filename = ((StringValue) value);
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(filename.getValue()));
+                fileTable.put(filename, bufferedReader);
+            } catch (FileNotFoundException fileNotFoundException) {
+                throw new NotFoundException("File not found" + filename.getValue());
+            }
         }
         return null;
     }

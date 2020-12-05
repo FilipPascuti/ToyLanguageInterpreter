@@ -1,17 +1,18 @@
 package model.utilities.ADTs;
 
+import exceptions.VariableNotDefined;
 import model.values.StringValue;
 
 import java.io.BufferedReader;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FileTable implements  IFileTable{
 
     private final Map<StringValue, BufferedReader> files;
 
     public FileTable() {
-        this.files = new HashMap<>();
+        this.files = new ConcurrentHashMap<>();
     }
 
     public FileTable(Map<StringValue, BufferedReader> files) {
