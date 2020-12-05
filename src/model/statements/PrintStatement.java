@@ -16,12 +16,14 @@ public class PrintStatement implements IStatement{
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IList<Value> output = state.getOutput();
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IHeap<Value> heap = state.getHeap();
-        Value value = expression.evaluate(symbolTable, heap);
-        output.add(value);
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IList<Value> output = state.getOutput();
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IHeap<Value> heap = state.getHeap();
+            Value value = expression.evaluate(symbolTable, heap);
+            output.add(value);
+        }
         return null;
     }
 

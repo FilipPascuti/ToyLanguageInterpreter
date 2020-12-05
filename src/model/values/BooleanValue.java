@@ -23,6 +23,11 @@ public class BooleanValue implements Value {
     }
 
     @Override
+    public Value deepCopy() {
+        return new BooleanValue(this.value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

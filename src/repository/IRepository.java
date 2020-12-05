@@ -1,10 +1,13 @@
 package repository;
 
 import model.ProgramState;
+import model.utilities.ADTs.IList;
+
+import java.util.List;
 
 public interface IRepository {
 
-//    void addProgram(ProgramState newProgram);
-    ProgramState getCrtProgram();
-    void logProgramStateExecution();
+    List<ProgramState> getProgramList();
+    void setProgramList(List<ProgramState> programs);
+    void logProgramStateExecution(ProgramState program);
 }

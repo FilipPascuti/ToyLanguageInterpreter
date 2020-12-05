@@ -1,56 +1,89 @@
 package controller;
 
-import exceptions.StackIsEmptyException;
+import exceptions.ConcurrentException;
+import exceptions.UnableToGetFutureExeption;
 import model.ProgramState;
-import model.statements.IStatement;
 import model.utilities.ADTs.IHeap;
-import model.utilities.ADTs.IStack;
 import model.values.RefValue;
 import model.values.Value;
 import repository.IRepository;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Controller {
 
     private final IRepository repository;
-    private final boolean displayState;
+    private ExecutorService executor;
 
-    public Controller(IRepository repository, boolean displayState) {
+    public Controller(IRepository repository) {
         this.repository = repository;
-        this.displayState = displayState;
     }
 
-    private ProgramState oneStep(ProgramState state){
-        IStack<IStatement> executionStack = state.getExecutionStack();
-        if(executionStack.isEmpty())
-            throw new StackIsEmptyException("The execution stack is empty.\n");
-        IStatement currentStatement = executionStack.pop();
-        return currentStatement.execute(state);
+    public List<ProgramState> removeCompletedPrograms(List<ProgramState> inProgramList){
+        return inProgramList.stream()
+                .filter(ProgramState::isNotCompleted)
+                .collect(Collectors.toList());
+    }
+
+    public void oneStepForAllPrograms(List<ProgramState> programList){
+//        print the initial program list
+        programList.forEach(repository::logProgramStateExecution);
+
+//        make the list of callables
+        List<Callable<ProgramState>> callList = programList.stream()
+                .map((ProgramState program) -> (Callable<ProgramState>)(program::oneStep))
+                .collect(Collectors.toList());
+
+        List<ProgramState> newProgramList;
+        try {
+            newProgramList = executor.invokeAll(callList).stream()
+                    .map(future -> {
+                        try {
+                            return future.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            throw new UnableToGetFutureExeption(e.getMessage());
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (InterruptedException | UnableToGetFutureExeption e) {
+            throw new ConcurrentException(e.getMessage());
+        }
+
+        programList.addAll(newProgramList);
+
+        programList.forEach(repository::logProgramStateExecution);
+
+        repository.setProgramList(programList);
     }
 
     public void allSteps(){
-        ProgramState programState = repository.getCrtProgram();
-        if(displayState) {
-//            System.out.println(programState);
-            this.repository.logProgramStateExecution();
+        executor = Executors.newFixedThreadPool(2);
+        List<ProgramState> programList = removeCompletedPrograms(repository.getProgramList());
+        while(programList.size() > 0){
+            collectTheGarbage(programList);
+            oneStepForAllPrograms(programList);
+            programList = removeCompletedPrograms(repository.getProgramList());
         }
-        while(!programState.getExecutionStack().isEmpty()){
-            oneStep(programState);
-//            Garbage Collection part
-            IHeap<Value> heap = programState.getHeap();
-            heap.setContent(garbageCollector(
-                    getAddressesFromSymbolTableAndHeap(
-                            programState.getSymbolTable().getContent().values(),
-                            heap.getContent()),
-                    programState.getHeap().getContent()));
-//            Logging part
-            if(displayState) {
-//                System.out.println(programState);
-                this.repository.logProgramStateExecution();
-            }
-        }
+        executor.shutdownNow();
+        repository.setProgramList(programList);
+    }
+
+    private void collectTheGarbage(List<ProgramState> programList) {
+        IHeap<Value> heap = programList.get(0).getHeap();
+        heap.setContent(garbageCollector(
+                getAddressesFromSymbolTablesAndHeap(heap.getContent()),
+                heap.getContent()));
+    }
+
+    private Map<Integer, Value> garbageCollector(
+            List<Integer> addresses, Map<Integer, Value> heap) {
+        return heap.entrySet().stream()
+                .filter(element -> addresses.contains(element.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private List<Integer> getAddressesFromSymbolTable(Collection<Value> symbolTableValues) {
@@ -60,15 +93,23 @@ public class Controller {
                 .collect(Collectors.toList());
     }
 
-    private List<Integer> getAddressesFromSymbolTableAndHeap(
-            Collection<Value> symbolTableValues, Map<Integer, Value> heap) {
-        Set<Map.Entry<Integer, Value>> heapEntrySet = heap.entrySet();
-        LinkedList<Integer> addressesList = new LinkedList<>(getAddressesFromSymbolTable(symbolTableValues));
+    private List<Integer> getAllAddressesFromSymbolTables() {
+        return repository.getProgramList().stream()
+                .map(program -> getAddressesFromSymbolTable(program.getSymbolTable().getContent().values()))
+                .reduce(Stream.of(0).collect(Collectors.toList()),
+                        (acc, item) -> Stream.concat(acc.stream(), item.stream())
+                                .collect(Collectors.toList()));
+    }
 
+    private List<Integer> getAddressesFromSymbolTablesAndHeap(Map<Integer, Value> heap) {
+
+        List<Integer> addressesList = getAllAddressesFromSymbolTables();
+
+        Set<Map.Entry<Integer, Value>> heapEntrySet = heap.entrySet();
         boolean doneFinding = false;
         while (!doneFinding) {
             doneFinding = true;
-            List<Integer> addressesFromHeap = heap.entrySet().stream()
+            List<Integer> addressesFromHeap = heapEntrySet.stream()
                     .filter(element -> addressesList.contains(element.getKey()))
                     .filter(element -> element.getValue() instanceof RefValue)
                     .map(element -> ((RefValue) element.getValue()).getAddress())
@@ -80,12 +121,5 @@ public class Controller {
             }
         }
         return addressesList;
-    }
-
-    private Map<Integer, Value> garbageCollector(
-            List<Integer> addresses, Map<Integer, Value> heap) {
-        return heap.entrySet().stream()
-                .filter(element -> addresses.contains(element.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

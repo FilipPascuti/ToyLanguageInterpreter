@@ -23,7 +23,8 @@ public class HeapWriteStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state){
         IDictionary<String, Value> symbolTable = state.getSymbolTable();
         IHeap<Value> heap = state.getHeap();
         if(!symbolTable.containsKey(variableName))
@@ -31,12 +32,14 @@ public class HeapWriteStatement implements IStatement {
         if(!(symbolTable.lookUp(variableName).getType() instanceof RefType))
             throw new InvalidArguments("invalid type of variable");
         RefValue variable = (RefValue) symbolTable.lookUp(variableName);
-        if(!heap.containsKey(variable.getAddress()))
-            throw new InvalidArguments("Variable not in heap");
-        Value value = expression.evaluate(symbolTable, heap);
-        if(!variable.getType().equals(new RefType(value.getType())))
-            throw new InvalidArguments("the expression and the variable and not of the same type");
-        heap.replace(variable.getAddress(), value);
+
+            if (!heap.containsKey(variable.getAddress()))
+                throw new InvalidArguments("Variable not in heap");
+            Value value = expression.evaluate(symbolTable, heap);
+            if (!variable.getType().equals(new RefType(value.getType())))
+                throw new InvalidArguments("the expression and the variable and not of the same type");
+            heap.replace(variable.getAddress(), value);
+        }
         return null;
     }
 

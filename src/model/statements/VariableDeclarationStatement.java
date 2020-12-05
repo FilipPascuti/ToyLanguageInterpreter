@@ -18,18 +18,20 @@ public class VariableDeclarationStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        if(symbolTable.containsKey(name))
-            throw new AlreadyExistingVariable("variable is already declared");
-        if(type instanceof IntType)
-            symbolTable.put(name, type.defaultValue());
-        else if(type instanceof BooleanType)
-            symbolTable.put(name, type.defaultValue());
-        else if(type instanceof StringType)
-            symbolTable.put(name, type.defaultValue());
-        else if(type instanceof RefType)
-            symbolTable.put(name, type.defaultValue());
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            if (symbolTable.containsKey(name))
+                throw new AlreadyExistingVariable("variable is already declared");
+            if (type instanceof IntType)
+                symbolTable.put(name, type.defaultValue());
+            else if (type instanceof BooleanType)
+                symbolTable.put(name, type.defaultValue());
+            else if (type instanceof StringType)
+                symbolTable.put(name, type.defaultValue());
+            else if (type instanceof RefType)
+                symbolTable.put(name, type.defaultValue());
+        }
         return null;
     }
 

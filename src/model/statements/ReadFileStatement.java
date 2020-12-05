@@ -28,31 +28,33 @@ public class ReadFileStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IFileTable fileTable = state.getFileTable();
-        IHeap<Value> heap = state.getHeap();
-        if(!symbolTable.containsKey(variableName))
-            throw new NotFoundException("The variable does not exist");
-        if(!(symbolTable.lookUp(variableName).getType().equals(new IntType())))
-            throw new InvalidArguments("Invalid variable type");
-        Value value = expression.evaluate(symbolTable, heap);
-        if(!(value.getType().equals(new StringType())))
-            throw new InvalidArguments("The expresion is not of valid string type.");
-        StringValue filename = ((StringValue) value);
-        if(!fileTable.containsKey(filename))
-            throw new NotFoundException("The file that you want to read from is not opened");
-        BufferedReader reader = fileTable.lookUp(filename);
-        String line;
-        try {
-            line = reader.readLine();
-        } catch (IOException ioException) {
-            throw new ReadingException("An error occured while trying to read from the file");
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IFileTable fileTable = state.getFileTable();
+            IHeap<Value> heap = state.getHeap();
+            if(!symbolTable.containsKey(variableName))
+                throw new NotFoundException("The variable does not exist");
+            if(!(symbolTable.lookUp(variableName).getType().equals(new IntType())))
+                throw new InvalidArguments("Invalid variable type");
+            Value value = expression.evaluate(symbolTable, heap);
+            if(!(value.getType().equals(new StringType())))
+                throw new InvalidArguments("The expresion is not of valid string type.");
+            StringValue filename = ((StringValue) value);
+            if (!fileTable.containsKey(filename))
+                throw new NotFoundException("The file that you want to read from is not opened");
+            BufferedReader reader = fileTable.lookUp(filename);
+            String line;
+            try {
+                line = reader.readLine();
+            } catch (IOException ioException) {
+                throw new ReadingException("An error occured while trying to read from the file");
+            }
+            if (line == null)
+                symbolTable.replace(variableName, new IntValue(0));
+            else
+                symbolTable.replace(variableName, new IntValue((Integer.parseInt(line))));
         }
-        if(line == null)
-            symbolTable.replace(variableName, new IntValue(0));
-        else
-            symbolTable.replace(variableName, new IntValue((Integer.parseInt(line))));
         return null;
     }
 

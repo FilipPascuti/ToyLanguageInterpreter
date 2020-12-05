@@ -12,7 +12,6 @@ import model.utilities.ADTs.*;
 import model.values.BooleanValue;
 import model.values.IntValue;
 import model.values.StringValue;
-import model.values.Value;
 import repository.IRepository;
 import repository.Repository;
 import view.commands.ExitCommand;
@@ -33,7 +32,7 @@ public class Interpreter {
 
         ProgramState state1 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement1, new MyHeap<>());
         IRepository repository1 = new Repository(state1, "log1.txt");
-        Controller controller1 = new Controller(repository1, true);
+        Controller controller1 = new Controller(repository1);
 
         IStatement statement2 = new CompoundStatement(
                 new VariableDeclarationStatement("a", new IntType()),
@@ -61,7 +60,7 @@ public class Interpreter {
 
         ProgramState state2 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement2, new MyHeap<>());
         IRepository repository2 = new Repository(state2, "log2.txt");
-        Controller controller2 = new Controller(repository2, true);
+        Controller controller2 = new Controller(repository2);
 
         IStatement statement3 = new CompoundStatement(
                 new VariableDeclarationStatement("a", new BooleanType()),
@@ -83,7 +82,7 @@ public class Interpreter {
 
         ProgramState state3 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement3, new MyHeap<>());
         IRepository repository3 = new Repository(state3, "log3.txt");
-        Controller controller3 = new Controller(repository3, true);
+        Controller controller3 = new Controller(repository3);
 
         IStatement statement4 = new CompoundStatement(
                 new VariableDeclarationStatement("file", new StringType()),
@@ -113,7 +112,7 @@ public class Interpreter {
 
         ProgramState state4 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement4, new MyHeap<>());
         IRepository repository4 = new Repository(state4, "log4.txt");
-        Controller controller4 = new Controller(repository4, true);
+        Controller controller4 = new Controller(repository4);
 
 
 
@@ -136,6 +135,7 @@ public class Interpreter {
 
         ProgramState state5 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement5, new MyHeap<>());
         IRepository repository5 = new Repository(state5, "log5.txt");
+        Controller controller5 = new Controller(repository5);
 
         IStatement statement6 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -156,7 +156,7 @@ public class Interpreter {
 
         ProgramState state6 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement6, new MyHeap<>());
         IRepository repository6 = new Repository(state6, "log6.txt");
-        Controller controller6 = new Controller(repository6, true);
+        Controller controller6 = new Controller(repository6);
 
         IStatement statement7 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -177,34 +177,12 @@ public class Interpreter {
                         )
                 )
         );
-        Controller controller5 = new Controller(repository5, true);
 
         ProgramState state7 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement7, new MyHeap<>());
         IRepository repository7 = new Repository(state7, "log7.txt");
-        Controller controller7 = new Controller(repository7, true);
+        Controller controller7 = new Controller(repository7);
 
         IStatement statement8 = new CompoundStatement(
-                new VariableDeclarationStatement("v", new RefType(new IntType())),
-                new CompoundStatement(
-                        new NewStatement("v", new ValueExpression(new IntValue(20))),
-                        new CompoundStatement(
-                                new VariableDeclarationStatement("a", new RefType(new RefType(new IntType()))),
-                                new CompoundStatement(
-                                        new NewStatement("a", new VarExpression("v")),
-                                        new CompoundStatement(
-                                                new NewStatement("v", new ValueExpression(new IntValue(30))),
-                                                new PrintStatement( new ReadHeapExpression(new ReadHeapExpression(new VarExpression("a"))))
-                                        )
-                                )
-                        )
-                )
-        );
-
-        ProgramState state8 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement8, new MyHeap<>());
-        IRepository repository8 = new Repository(state8, "log8.txt");
-        Controller controller8 = new Controller(repository8, true);
-
-        IStatement statement9 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
                 new CompoundStatement(
                         new NewStatement("v", new ValueExpression(new IntValue(20))),
@@ -221,11 +199,11 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state9 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement9, new MyHeap<>());
-        IRepository repository9 = new Repository(state9, "log9.txt");
-        Controller controller9 = new Controller(repository9, true);
+        ProgramState state8 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement8, new MyHeap<>());
+        IRepository repository8 = new Repository(state8, "log8.txt");
+        Controller controller8 = new Controller(repository8);
 
-        IStatement statement10 = new CompoundStatement(
+        IStatement statement9 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
                 new CompoundStatement(
                         new NewStatement("v", new ValueExpression(new IntValue(20))),
@@ -236,11 +214,11 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state10 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement10, new MyHeap<>());
-        IRepository repository10 = new Repository(state10, "log10.txt");
-        Controller controller10 = new Controller(repository10, true);
+        ProgramState state9 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement9, new MyHeap<>());
+        IRepository repository9 = new Repository(state9, "log9.txt");
+        Controller controller9 = new Controller(repository9);
 
-        IStatement statement11 = new CompoundStatement(
+        IStatement statement10 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new IntType()),
                 new CompoundStatement(
                         new AssignmentStatement("v", new ValueExpression(new IntValue(4))),
@@ -257,9 +235,47 @@ public class Interpreter {
                 )
         );
 
+        ProgramState state10 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement10, new MyHeap<>());
+        IRepository repository10 = new Repository(state10, "log10.txt");
+        Controller controller10 = new Controller(repository10);
+
+        IStatement statement11 = new CompoundStatement(
+                new VariableDeclarationStatement("v", new IntType()),
+                new CompoundStatement(
+                        new VariableDeclarationStatement("a", new RefType(new IntType())),
+                        new CompoundStatement(
+                                new AssignmentStatement("v", new ValueExpression(new IntValue(10))),
+                                new CompoundStatement(
+                                        new NewStatement("a", new ValueExpression(new IntValue(22))),
+                                        new CompoundStatement(
+                                                new ForkStatement(
+                                                        new CompoundStatement(
+                                                                new HeapWriteStatement("a", new ValueExpression(new IntValue(30))),
+                                                                new CompoundStatement(
+                                                                        new AssignmentStatement("v", new ValueExpression(new IntValue(32))),
+                                                                        new CompoundStatement(
+                                                                                new PrintStatement(new VarExpression("v")),
+                                                                                new PrintStatement(new ReadHeapExpression(new VarExpression("a")))
+                                                                        )
+                                                                )
+                                                        )
+                                                ),
+                                                new CompoundStatement(
+                                                        new PrintStatement(new VarExpression("v")),
+                                                        new PrintStatement(new ReadHeapExpression(new VarExpression("a")))
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
+
+
+
         ProgramState state11 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement11, new MyHeap<>());
         IRepository repository11 = new Repository(state11, "log11.txt");
-        Controller controller11 = new Controller(repository11, true);
+        Controller controller11 = new Controller(repository11);
+
 
         TextMenu menu = new TextMenu();
         menu.addCommand(new ExitCommand("0", "exit"));

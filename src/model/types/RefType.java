@@ -21,6 +21,11 @@ public class RefType implements Type {
     }
 
     @Override
+    public Type deepCopy() {
+        return new RefType(inner.deepCopy());
+    }
+
+    @Override
     public boolean equals(Object other) {
         if(other instanceof RefType)
             return inner.equals(((RefType) other).getInner());

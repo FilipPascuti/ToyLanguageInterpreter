@@ -18,6 +18,11 @@ public class StringType implements Type{
     }
 
     @Override
+    public Type deepCopy() {
+        return new StringType();
+    }
+
+    @Override
     public String toString(){
         return "String";
     }

@@ -23,6 +23,11 @@ public class StringValue implements Value {
     }
 
     @Override
+    public Value deepCopy() {
+        return new StringValue(this.value);
+    }
+
+    @Override
     public String toString(){
         return value;
     }

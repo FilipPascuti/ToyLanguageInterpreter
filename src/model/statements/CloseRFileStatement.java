@@ -24,23 +24,25 @@ public class CloseRFileStatement implements IStatement {
     }
 
     @Override
-    public ProgramState execute(ProgramState state) {
-        IDictionary<String, Value> symbolTable = state.getSymbolTable();
-        IFileTable fileTable = state.getFileTable();
-        IHeap<Value> heap = state.getHeap();
-        var value = expression.evaluate(symbolTable, heap);
-        if(!(value.getType().equals(new StringType())))
-            throw new InvalidArguments("invalid expression type");
-        StringValue filename = (StringValue) value;
-        if(!fileTable.containsKey(filename))
-            throw new AlreadyExistingVariable("File is already closed");
-        BufferedReader reader = fileTable.lookUp(filename);
-        try {
-            reader.close();
-        } catch (IOException ioException) {
-            throw new ClosingFileException("An error occured while trying to close the file");
+    public synchronized ProgramState execute(ProgramState state) {
+        synchronized (state) {
+            IDictionary<String, Value> symbolTable = state.getSymbolTable();
+            IFileTable fileTable = state.getFileTable();
+            IHeap<Value> heap = state.getHeap();
+            Value value = expression.evaluate(symbolTable, heap);
+            if (!(value.getType().equals(new StringType())))
+                throw new InvalidArguments("invalid expression type");
+            StringValue filename = (StringValue) value;
+            if (!fileTable.containsKey(filename))
+                throw new AlreadyExistingVariable("File is already closed");
+            BufferedReader reader = fileTable.lookUp(filename);
+            try {
+                reader.close();
+            } catch (IOException ioException) {
+                throw new ClosingFileException("An error occured while trying to close the file");
+            }
+            fileTable.remove(filename);
         }
-        fileTable.remove(filename);
         return null;
     }
 
