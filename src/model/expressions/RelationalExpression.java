@@ -1,7 +1,10 @@
 package model.expressions;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
+import model.types.BooleanType;
 import model.types.IntType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.BooleanValue;
@@ -39,6 +42,15 @@ public class RelationalExpression implements Expression{
             case ">=" -> new BooleanValue(numberLeft >= numberRight);
             default -> throw new InvalidArguments("invalid operator");
         };
+    }
+
+    @Override
+    public Type typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!left.typecheck(typeEnvironment).equals(new IntType()))
+            throw new TypeCheckException("the expresion must be of IntType\n");
+        if(!right.typecheck(typeEnvironment).equals(new IntType()))
+            throw new TypeCheckException("the expresion must be of IntType\n");
+        return new BooleanType();
     }
 
     @Override

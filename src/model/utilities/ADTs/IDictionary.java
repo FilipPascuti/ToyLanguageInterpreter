@@ -8,5 +8,7 @@ public interface IDictionary<K, V> {
     void put(K key, V value);
     void remove(K key);
     void replace(K key, V newValue);
+    void setContent(Map<K,V> content);
     Map<K,V> getContent();
+    public IDictionary<K,V> deepCopy();
 }

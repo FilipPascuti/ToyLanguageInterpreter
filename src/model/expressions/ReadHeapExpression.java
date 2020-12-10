@@ -1,7 +1,9 @@
 package model.expressions;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.types.RefType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.RefValue;
@@ -16,16 +18,23 @@ public class ReadHeapExpression implements Expression{
     }
 
     @Override
-    public synchronized Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
+    public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
         Value value = expression.evaluate(symbolTable, heap);
         if(!(value.getType() instanceof RefType))
             throw new InvalidArguments("invalid type of variable");
         int address = ((RefValue) value).getAddress();
-        synchronized (heap) {
-            if (!heap.containsKey(address))
-                throw new InvalidArguments("The variable is not declared in the heap");
-            return heap.lookUp(address);
-        }
+
+        if (!heap.containsKey(address))
+            throw new InvalidArguments("The variable is not declared in the heap");
+        return heap.lookUp(address);
+    }
+
+    @Override
+    public Type typecheck(IDictionary<String, Type> typeEnvironment) {
+        Type type = expression.typecheck(typeEnvironment);
+        if(!(type instanceof RefType))
+            throw new TypeCheckException("the argument should be a RefType\n");
+        return ((RefType) type).getInner();
     }
 
     @Override

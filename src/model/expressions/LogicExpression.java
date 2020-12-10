@@ -1,7 +1,10 @@
 package model.expressions;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.types.BooleanType;
+import model.types.IntType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.BooleanValue;
@@ -35,6 +38,15 @@ public class LogicExpression implements Expression {
             return new BooleanValue(bool1 || bool2);
         }
         return null;
+    }
+
+    @Override
+    public Type typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!left.typecheck(typeEnvironment).equals(new BooleanType()))
+            throw new TypeCheckException("the expresion must be of BooleanType\n");
+        if(!right.typecheck(typeEnvironment).equals(new BooleanType()))
+            throw new TypeCheckException("the expresion must be of BooleanType\n");
+        return new BooleanType();
     }
 
     @Override

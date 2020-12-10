@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.*;
 import model.statements.*;
@@ -21,6 +22,9 @@ public class Interpreter {
 
     public static void main(String[] args) {
 
+        TextMenu menu = new TextMenu();
+        menu.addCommand(new ExitCommand("0", "exit"));
+
         IStatement statement1 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new IntType()),
                 new CompoundStatement(
@@ -30,9 +34,15 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state1 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement1, new MyHeap<>());
-        IRepository repository1 = new Repository(state1, "log1.txt");
-        Controller controller1 = new Controller(repository1);
+        try {
+            statement1.typecheck(new MyDictionary<>());
+            ProgramState state1 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement1, new MyHeap<>());
+            IRepository repository1 = new Repository(state1, "log1.txt");
+            Controller controller1 = new Controller(repository1);
+            menu.addCommand(new RunExample("1",statement1.toString(),controller1));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
         IStatement statement2 = new CompoundStatement(
                 new VariableDeclarationStatement("a", new IntType()),
@@ -58,9 +68,16 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state2 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement2, new MyHeap<>());
-        IRepository repository2 = new Repository(state2, "log2.txt");
-        Controller controller2 = new Controller(repository2);
+        try {
+            statement2.typecheck(new MyDictionary<>());
+            ProgramState state2 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement2, new MyHeap<>());
+            IRepository repository2 = new Repository(state2, "log2.txt");
+            Controller controller2 = new Controller(repository2);
+            menu.addCommand(new RunExample("2",statement2.toString(),controller2));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+
 
         IStatement statement3 = new CompoundStatement(
                 new VariableDeclarationStatement("a", new BooleanType()),
@@ -80,9 +97,16 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state3 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement3, new MyHeap<>());
-        IRepository repository3 = new Repository(state3, "log3.txt");
-        Controller controller3 = new Controller(repository3);
+        try {
+            statement3.typecheck(new MyDictionary<>());
+            ProgramState state3 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement3, new MyHeap<>());
+            IRepository repository3 = new Repository(state3, "log3.txt");
+            Controller controller3 = new Controller(repository3);
+            menu.addCommand(new RunExample("3",statement3.toString(),controller3));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+
 
         IStatement statement4 = new CompoundStatement(
                 new VariableDeclarationStatement("file", new StringType()),
@@ -110,10 +134,15 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state4 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement4, new MyHeap<>());
-        IRepository repository4 = new Repository(state4, "log4.txt");
-        Controller controller4 = new Controller(repository4);
-
+        try {
+            statement4.typecheck(new MyDictionary<>());
+            ProgramState state4 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement4, new MyHeap<>());
+            IRepository repository4 = new Repository(state4, "log4.txt");
+            Controller controller4 = new Controller(repository4);
+            menu.addCommand(new RunExample("4",statement4.toString(),controller4));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
 
         IStatement statement5 = new CompoundStatement(
@@ -132,10 +161,16 @@ public class Interpreter {
                         )
                 )
         );
+        try {
+            statement5.typecheck(new MyDictionary<>());
+            ProgramState state5 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement5, new MyHeap<>());
+            IRepository repository5 = new Repository(state5, "log5.txt");
+            Controller controller5 = new Controller(repository5);
+            menu.addCommand(new RunExample("5",statement5.toString(),controller5));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
-        ProgramState state5 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement5, new MyHeap<>());
-        IRepository repository5 = new Repository(state5, "log5.txt");
-        Controller controller5 = new Controller(repository5);
 
         IStatement statement6 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -154,9 +189,16 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state6 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement6, new MyHeap<>());
-        IRepository repository6 = new Repository(state6, "log6.txt");
-        Controller controller6 = new Controller(repository6);
+        try {
+            statement6.typecheck(new MyDictionary<>());
+            ProgramState state6 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement6, new MyHeap<>());
+            IRepository repository6 = new Repository(state6, "log6.txt");
+            Controller controller6 = new Controller(repository6);
+            menu.addCommand(new RunExample("6",statement6.toString(),controller6));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+
 
         IStatement statement7 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -178,9 +220,16 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state7 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement7, new MyHeap<>());
-        IRepository repository7 = new Repository(state7, "log7.txt");
-        Controller controller7 = new Controller(repository7);
+        try {
+            statement7.typecheck(new MyDictionary<>());
+            ProgramState state7 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement7, new MyHeap<>());
+            IRepository repository7 = new Repository(state7, "log7.txt");
+            Controller controller7 = new Controller(repository7);
+            menu.addCommand(new RunExample("7",statement7.toString(),controller7));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+
 
         IStatement statement8 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -199,9 +248,17 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state8 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement8, new MyHeap<>());
-        IRepository repository8 = new Repository(state8, "log8.txt");
-        Controller controller8 = new Controller(repository8);
+        try {
+            statement8.typecheck(new MyDictionary<>());
+            ProgramState state8 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement8, new MyHeap<>());
+            IRepository repository8 = new Repository(state8, "log8.txt");
+            Controller controller8 = new Controller(repository8);
+            menu.addCommand(new RunExample("8", statement8.toString(), controller8));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+
+
 
         IStatement statement9 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new RefType(new IntType())),
@@ -214,9 +271,15 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state9 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement9, new MyHeap<>());
-        IRepository repository9 = new Repository(state9, "log9.txt");
-        Controller controller9 = new Controller(repository9);
+        try {
+            statement9.typecheck(new MyDictionary<>());
+            ProgramState state9 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement9, new MyHeap<>());
+            IRepository repository9 = new Repository(state9, "log9.txt");
+            Controller controller9 = new Controller(repository9);
+            menu.addCommand(new RunExample("9", statement9.toString(), controller9));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
         IStatement statement10 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new IntType()),
@@ -235,9 +298,15 @@ public class Interpreter {
                 )
         );
 
-        ProgramState state10 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement10, new MyHeap<>());
-        IRepository repository10 = new Repository(state10, "log10.txt");
-        Controller controller10 = new Controller(repository10);
+        try {
+            statement10.typecheck(new MyDictionary<>());
+            ProgramState state10 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement10, new MyHeap<>());
+            IRepository repository10 = new Repository(state10, "log10.txt");
+            Controller controller10 = new Controller(repository10);
+            menu.addCommand(new RunExample("10", statement10.toString(), controller10));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
         IStatement statement11 = new CompoundStatement(
                 new VariableDeclarationStatement("v", new IntType()),
@@ -271,25 +340,33 @@ public class Interpreter {
         );
 
 
+        try {
+            statement11.typecheck(new MyDictionary<>());
+            ProgramState state11 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement11, new MyHeap<>());
+            IRepository repository11 = new Repository(state11, "log11.txt");
+            Controller controller11 = new Controller(repository11);
+            menu.addCommand(new RunExample("11", statement11.toString(), controller11));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
+        
+        IStatement statement12 = new CompoundStatement(
+                new VariableDeclarationStatement("v", new IntType()),
+                new AssignmentStatement("v", new ValueExpression(new BooleanValue(true)))
+        );
 
-        ProgramState state11 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement11, new MyHeap<>());
-        IRepository repository11 = new Repository(state11, "log11.txt");
-        Controller controller11 = new Controller(repository11);
+
+        try {
+            statement12.typecheck(new MyDictionary<>());
+            ProgramState state12 = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new FileTable(), statement12, new MyHeap<>());
+            IRepository repository12 = new Repository(state12, "log12.txt");
+            Controller controller12 = new Controller(repository12);
+            menu.addCommand(new RunExample("12", statement12.toString(), controller12));
+        } catch (TypeCheckException exception){
+            System.out.println("There was a type error: " + exception.getMessage());
+        }
 
 
-        TextMenu menu = new TextMenu();
-        menu.addCommand(new ExitCommand("0", "exit"));
-        menu.addCommand(new RunExample("1",statement1.toString(),controller1));
-        menu.addCommand(new RunExample("2",statement2.toString(),controller2));
-        menu.addCommand(new RunExample("3",statement3.toString(),controller3));
-        menu.addCommand(new RunExample("4",statement4.toString(),controller4));
-        menu.addCommand(new RunExample("5",statement5.toString(),controller5));
-        menu.addCommand(new RunExample("6",statement6.toString(),controller6));
-        menu.addCommand(new RunExample("7",statement7.toString(),controller7));
-        menu.addCommand(new RunExample("8",statement8.toString(),controller8));
-        menu.addCommand(new RunExample("9",statement9.toString(),controller9));
-        menu.addCommand(new RunExample("10",statement10.toString(),controller10));
-        menu.addCommand(new RunExample("11",statement11.toString(),controller11));
         menu.show();
     }
 }

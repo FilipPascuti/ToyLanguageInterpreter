@@ -1,5 +1,7 @@
 package model.expressions;
 
+import exceptions.TypeCheckException;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.Value;
@@ -15,6 +17,13 @@ public class VarExpression implements Expression{
     @Override
     public Value evaluate(IDictionary<String, Value> symbolTable, IHeap<Value> heap) {
         return symbolTable.lookUp(id);
+    }
+
+    @Override
+    public Type typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!typeEnvironment.containsKey(id))
+            throw new TypeCheckException("the variable isn't defined\n");
+        return typeEnvironment.lookUp(id);
     }
 
     @Override

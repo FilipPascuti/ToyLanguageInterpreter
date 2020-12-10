@@ -1,8 +1,10 @@
 package model.statements;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import exceptions.VariableNotDefined;
@@ -31,6 +33,15 @@ public class AssignmentStatement implements IStatement {
             symbolTable.replace(id, value);
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!typeEnvironment.containsKey(id))
+            throw new TypeCheckException("The variable isn't declared.\n");
+        if(!typeEnvironment.lookUp(id).equals(expression.typecheck(typeEnvironment)))
+            throw new TypeCheckException("Assignment: right hand side and left hand side have different types.");
+        return typeEnvironment;
     }
 
     @Override

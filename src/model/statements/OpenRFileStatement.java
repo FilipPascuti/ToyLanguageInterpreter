@@ -3,9 +3,11 @@ package model.statements;
 import exceptions.AlreadyExistingVariable;
 import exceptions.InvalidArguments;
 import exceptions.NotFoundException;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.types.StringType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IFileTable;
 import model.utilities.ADTs.IHeap;
@@ -42,6 +44,13 @@ public class OpenRFileStatement implements IStatement{
             }
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!expression.typecheck(typeEnvironment).equals(new StringType()))
+            throw new TypeCheckException("The type of the expresion must be StringType\n");
+        return typeEnvironment;
     }
 
     @Override
