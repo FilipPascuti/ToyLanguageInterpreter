@@ -3,10 +3,12 @@ package model.statements;
 import exceptions.InvalidArguments;
 import exceptions.NotFoundException;
 import exceptions.ReadingException;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.types.IntType;
 import model.types.StringType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IFileTable;
 import model.utilities.ADTs.IHeap;
@@ -56,6 +58,17 @@ public class ReadFileStatement implements IStatement {
                 symbolTable.replace(variableName, new IntValue((Integer.parseInt(line))));
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!typeEnvironment.containsKey(variableName))
+            throw new TypeCheckException("variable is not defined.\n");
+        if(!typeEnvironment.lookUp(variableName).equals(new IntType()))
+            throw new TypeCheckException("the variable must be IntType.\n");
+        if(!expression.typecheck(typeEnvironment).equals(new StringType()))
+            throw new TypeCheckException("the expresion must be StringType.\n");
+        return typeEnvironment;
     }
 
     @Override

@@ -2,7 +2,9 @@ package model.expressions;
 
 import exceptions.DivisionByZero;
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.types.IntType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.IntValue;
@@ -42,6 +44,15 @@ public class ArithmeticExpression implements Expression{
             return new IntValue(number1 / number2);
         }
         return null;
+    }
+
+    @Override
+    public Type typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!left.typecheck(typeEnvironment).equals(new IntType()))
+            throw new TypeCheckException("the expresion must be of IntType\n");
+        if(!right.typecheck(typeEnvironment).equals(new IntType()))
+            throw new TypeCheckException("the expresion must be of IntType\n");
+        return new IntType();
     }
 
     @Override

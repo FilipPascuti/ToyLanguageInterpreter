@@ -1,6 +1,7 @@
 package model.statements;
 
 import model.ProgramState;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.MyDictionary;
 import model.utilities.ADTs.MyStack;
@@ -25,6 +26,12 @@ public class ForkStatement implements IStatement {
             return new ProgramState(new MyStack<>(), copySymbolTable, state.getOutput(),
                     state.getFileTable(), statement, state.getHeap());
         }
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        statement.typecheck(typeEnvironment.deepCopy());
+        return typeEnvironment;
     }
 
     @Override

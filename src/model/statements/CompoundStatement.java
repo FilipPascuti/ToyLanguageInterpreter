@@ -1,6 +1,8 @@
 package model.statements;
 
 import model.ProgramState;
+import model.types.Type;
+import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IStack;
 import model.utilities.ADTs.MyStack;
 
@@ -20,6 +22,11 @@ public class CompoundStatement implements IStatement {
         executionStack.push(second);
         executionStack.push(first);
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        return second.typecheck(first.typecheck(typeEnvironment));
     }
 
     @Override

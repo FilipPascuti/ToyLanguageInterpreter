@@ -13,7 +13,7 @@ public class RefType implements Type {
         this.inner = inner;
     }
 
-    Type getInner(){ return this.inner; }
+    public Type getInner(){ return this.inner; }
 
     @Override
     public Value defaultValue() {

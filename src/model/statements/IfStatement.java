@@ -1,9 +1,11 @@
 package model.statements;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.types.BooleanType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.utilities.ADTs.IStack;
@@ -38,6 +40,15 @@ public class IfStatement implements IStatement {
                 executionStack.push(elseStatement);
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!expression.typecheck(typeEnvironment).equals(new BooleanType()))
+            throw new TypeCheckException("the condition must be a BooleanType\n");
+        thenStatement.typecheck(typeEnvironment.deepCopy());
+        elseStatement.typecheck(typeEnvironment.deepCopy());
+        return typeEnvironment;
     }
 
     @Override

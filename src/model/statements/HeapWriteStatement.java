@@ -1,9 +1,11 @@
 package model.statements;
 
 import exceptions.InvalidArguments;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.types.RefType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.utilities.ADTs.IStack;
@@ -41,6 +43,15 @@ public class HeapWriteStatement implements IStatement {
             heap.replace(variable.getAddress(), value);
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!typeEnvironment.containsKey(variableName))
+            throw new TypeCheckException("the variable isn't defined.");
+        if(!typeEnvironment.lookUp(variableName).equals(new RefType(expression.typecheck(typeEnvironment))))
+            throw new TypeCheckException("Right hand side and left hand side have different types.\n");
+        return typeEnvironment;
     }
 
     @Override

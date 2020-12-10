@@ -1,6 +1,7 @@
 package model.statements;
 
 import exceptions.AlreadyExistingVariable;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.types.*;
 import model.utilities.ADTs.IDictionary;
@@ -33,6 +34,14 @@ public class VariableDeclarationStatement implements IStatement {
                 symbolTable.put(name, type.defaultValue());
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(typeEnvironment.containsKey(name))
+            throw new TypeCheckException("Variable already declared.\n");
+        typeEnvironment.put(name, type);
+        return typeEnvironment;
     }
 
     @Override

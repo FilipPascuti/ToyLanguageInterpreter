@@ -43,8 +43,21 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     }
 
     @Override
+    public void setContent(Map<K, V> content) {
+        this.map = content;
+    }
+
+    @Override
     public Map<K, V> getContent() {
         return map;
+    }
+
+    @Override
+    public IDictionary<K, V> deepCopy() {
+        Map<K,V> copyMap = new ConcurrentHashMap<>(map);
+        MyDictionary<K,V> copyMyDictionary = new MyDictionary<>();
+        copyMyDictionary.setContent(copyMap);
+        return copyMyDictionary;
     }
 
     @Override

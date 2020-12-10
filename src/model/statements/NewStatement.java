@@ -2,9 +2,11 @@ package model.statements;
 
 import exceptions.InvalidArguments;
 import exceptions.NotFoundException;
+import exceptions.TypeCheckException;
 import model.ProgramState;
 import model.expressions.Expression;
 import model.types.RefType;
+import model.types.Type;
 import model.utilities.ADTs.IDictionary;
 import model.utilities.ADTs.IHeap;
 import model.values.RefValue;
@@ -37,6 +39,15 @@ public class NewStatement implements IStatement {
             symbolTable.replace(variableName, new RefValue(newAddress, ((RefValue) variable).getLocationType()));
         }
         return null;
+    }
+
+    @Override
+    public IDictionary<String, Type> typecheck(IDictionary<String, Type> typeEnvironment) {
+        if(!typeEnvironment.containsKey(variableName))
+            throw new TypeCheckException("the variable isn't defined.");
+        if(!typeEnvironment.lookUp(variableName).equals(new RefType(expression.typecheck(typeEnvironment))))
+            throw new TypeCheckException("Right hand side and left hand side have different types.\n");
+        return typeEnvironment;
     }
 
     @Override
