@@ -86,6 +86,9 @@ public class ProgramState {
         return currentStatement.execute(this);
     }
 
+    public int getProgramId() {
+        return programId;
+    }
 
     @Override
     public String toString() {

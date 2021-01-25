@@ -12,8 +12,6 @@ import model.utilities.ADTs.IStack;
 import model.values.RefValue;
 import model.values.Value;
 
-import java.sql.Ref;
-
 public class HeapWriteStatement implements IStatement {
 
     private final String variableName;

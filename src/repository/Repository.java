@@ -2,6 +2,7 @@ package repository;
 
 import exceptions.WritingExeption;
 import model.ProgramState;
+import model.statements.IStatement;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,8 +13,10 @@ public class Repository implements IRepository{
 
     private List<ProgramState> programs;
     private final String filename;
+    private IStatement originalProgram;
 
     public Repository(ProgramState program, String filename) {
+        this.originalProgram = program.getOriginalProgram();
         this.programs = new ArrayList<>();
         this.programs.add(program);
         this.filename = filename;
@@ -40,5 +43,10 @@ public class Repository implements IRepository{
             throw new WritingExeption("Couldn't write to file");
         }
 
+    }
+
+    @Override
+    public IStatement getOriginalProgram() {
+        return originalProgram;
     }
 }

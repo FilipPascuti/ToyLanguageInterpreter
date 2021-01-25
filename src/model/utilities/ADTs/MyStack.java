@@ -2,9 +2,8 @@ package model.utilities.ADTs;
 
 import exceptions.StackIsEmptyException;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.EmptyStackException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MyStack<E> implements IStack<E>{
     private Deque<E> stack;
@@ -30,6 +29,11 @@ public class MyStack<E> implements IStack<E>{
     @Override
     public boolean isEmpty() {
         return stack.isEmpty();
+    }
+
+    @Override
+    public List<E> toList() {
+        return new ArrayList<>(stack);
     }
 
     @Override

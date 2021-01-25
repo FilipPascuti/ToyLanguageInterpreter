@@ -29,6 +29,11 @@ public class MyList<E> implements IList<E> {
     }
 
     @Override
+    public int size() {
+        return list.size();
+    }
+
+    @Override
     public String toString() {
         return list.toString();
     }

@@ -20,7 +20,25 @@ public class Controller {
 
     public Controller(IRepository repository) {
         this.repository = repository;
+        executor = Executors.newFixedThreadPool(3);
     }
+
+    public List<ProgramState> getProgramList(){
+        return repository.getProgramList();
+    }
+
+    public void executeOnlyOneStep(){
+        List<ProgramState> programList = removeCompletedPrograms(repository.getProgramList());
+        collectTheGarbage(programList);
+        oneStepForAllPrograms(programList);
+        programList = removeCompletedPrograms(repository.getProgramList());
+        repository.setProgramList(programList);
+        if (programList.isEmpty()) {
+            executor.shutdownNow();
+        }
+    }
+
+
 
     public List<ProgramState> removeCompletedPrograms(List<ProgramState> inProgramList){
         return inProgramList.stream()
@@ -61,7 +79,6 @@ public class Controller {
     }
 
     public void allSteps(){
-        executor = Executors.newFixedThreadPool(2);
         List<ProgramState> programList = removeCompletedPrograms(repository.getProgramList());
         while(programList.size() > 0){
             collectTheGarbage(programList);
@@ -121,5 +138,10 @@ public class Controller {
             }
         }
         return addressesList;
+    }
+
+    @Override
+    public String toString() {
+        return repository.getOriginalProgram().toString();
     }
 }
