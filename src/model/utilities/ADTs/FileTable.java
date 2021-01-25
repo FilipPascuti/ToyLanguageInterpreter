@@ -43,6 +43,11 @@ public class FileTable implements  IFileTable{
     }
 
     @Override
+    public Map<StringValue, BufferedReader> getContent() {
+        return files;
+    }
+
+    @Override
     public String toString() {
         return files.toString();
     }
